@@ -61,7 +61,7 @@
           </defs>
           <rect class="spe-content__svg-grid" :class="{'spe-content__svg-grid--visible': showGrid}" width="100%" height="100%" fill="url(#grid)" />
           <!-- Path -->
-          <path :d="outputPath" fill="#393939"></path>
+          <path :d="outputPath" fill="#393939" ref="path"></path>
         </svg>
       </div>
     </section>
@@ -76,7 +76,7 @@ export default {
   name: 'app',
   data () {
     return {
-      inputPath: "M214.441 94.563l53.795 53.794-136.169 136.17-53.765-53.794 136.14-136.171z m94.616-12.975l-23.991-23.99c-9.271-9.271-24.326-9.271-33.629 0l-22.981 22.98 53.795 53.795 26.806-26.805c7.191-7.192 7.191-18.789 0-25.98z m-258.907 224.757c-0.979 4.406 2.999 8.354 7.405 7.282l59.946-14.534-53.765-53.795-13.586 61.047z",
+      inputPath: "M164.441 44.563l53.795 53.794-136.169 136.17-53.765-53.794 136.14-136.171z m94.616-12.975l-23.991-23.99c-9.271-9.271-24.326-9.271-33.629 0l-22.981 22.98 53.795 53.795 26.806-26.805c7.191-7.192 7.191-18.789 0-25.98z m-258.907 224.757c-0.979 4.406 2.999 8.354 7.405 7.282l59.946-14.534-53.765-53.795-13.586 61.047z",
       inputPathError: false,
       outputPath: null,
       options: {
@@ -85,7 +85,9 @@ export default {
         translateY: 0,
         rotate: 0
       },
-      showGrid: false
+      showGrid: false,
+      centerX: 0,
+      centerY: 0
     }
   },
   methods: {
@@ -93,10 +95,8 @@ export default {
       const newPath = svgpath(this.inputPath);
       if(!newPath.err && this.inputPath){
         this.outputPath = newPath
+                          .rotate(this.options.rotate || 0, this.centerX, this.centerY)
                           .scale(Number(this.options.scale) || 1)
-                          .rel()
-                          .rotate(this.options.rotate || 0)
-                          .rel()
                           .translate(Number(this.options.translateX) || 0, Number(this.options.translateY) || 0)
                           .rel()
                           .round(3)
@@ -113,12 +113,20 @@ export default {
         translateY: 0,
         rotate: 0
       }
+    },
+    setCenterCoordinates() {
+      const SVGRect = this.$refs.path.getBBox();
+      this.centerX = SVGRect.width / 2 + SVGRect.x;
+      this.centerY = SVGRect.height / 2 + SVGRect.y;
     }
   },
   watch: {
     inputPath() {
       this.resetOptions();
       this.updatePath();
+      setTimeout(() => {
+        this.setCenterCoordinates();
+      }, 100);
     },
     options: {
       handler(options) {
@@ -132,6 +140,9 @@ export default {
   },
   mounted() {
     this.updatePath();
+    setTimeout(() => {
+      this.setCenterCoordinates();
+    }, 100);
   }
 }
 </script>
