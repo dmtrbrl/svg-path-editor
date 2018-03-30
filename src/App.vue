@@ -220,6 +220,7 @@ input, textarea{
     &-content{
       width: 100%;
       padding: 10px 0 0 10px;
+      overflow: hidden;
       &__svg{
         background: rgba(#393939, 0.05);
         &-grid{
