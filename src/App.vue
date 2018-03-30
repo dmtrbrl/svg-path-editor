@@ -153,7 +153,9 @@ body{
   color: #393939;
 }
 input, textarea{
+  min-width: 0;
   font-family: 'Roboto Mono', sans-serif;
+  font-size: 13px;
   color: #393939;
 }
 
