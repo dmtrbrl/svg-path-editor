@@ -2,6 +2,13 @@
   <div id="app" class="spe">
     <header class="spe-header">
       <h1 class="spe-heading">SVG Path Editor</h1>
+      <div class="spe-controls">
+        <label class="spe-toggle">
+          <input type="checkbox" class="spe-toggle__checkbox" v-model="showGrid">
+          <div class="spe-toggle__btn"></div>
+          <div class="spe-toggle__label">Show grid</div>
+        </label>
+      </div>
     </header>
     <section class="spe-main">
       <aside class="spe-aside">
@@ -42,6 +49,18 @@
           width="100%" height="100%"
           xmlns="http://www.w3.org/2000/svg"
           class="spe-content__svg">
+          <!-- Grid -->
+          <defs>
+            <pattern id="smallGrid" width="8" height="8" patternUnits="userSpaceOnUse">
+              <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#393939" opacity="0.4" stroke-width="0.5"/>
+            </pattern>
+            <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+              <rect width="80" height="80" fill="url(#smallGrid)"/>
+              <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#393939" opacity="0.4" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect class="spe-content__svg-grid" :class="{'spe-content__svg-grid--visible': showGrid}" width="100%" height="100%" fill="url(#grid)" />
+          <!-- Path -->
           <path :d="outputPath" fill="#393939"></path>
         </svg>
       </div>
@@ -65,7 +84,8 @@ export default {
         translateX: 0,
         translateY: 0,
         rotate: 0
-      }
+      },
+      showGrid: false
     }
   },
   methods: {
@@ -74,7 +94,9 @@ export default {
       if(!newPath.err && this.inputPath){
         this.outputPath = newPath
                           .scale(Number(this.options.scale) || 1)
+                          .rel()
                           .rotate(this.options.rotate || 0)
+                          .rel()
                           .translate(Number(this.options.translateX) || 0, Number(this.options.translateY) || 0)
                           .rel()
                           .round(3)
@@ -138,16 +160,22 @@ input, textarea{
 .spe{
   // Header
   &-header{
+    display: flex;
+    align-items: center;
     height: 50px;
-    padding: 15px;
     border-bottom: 1px solid rgba(#393939, 0.2);
   }
     &-heading{
+      width: 280px;
       margin: 0;
+      padding: 15px;
       font-family: "Roboto Mono", sans-serif;
       font-weight: 500;
       font-size: 16px;
       line-height: 20px;
+    }
+    &-controls{
+      padding: 10px;
     }
   // Main
   &-main{
@@ -191,12 +219,63 @@ input, textarea{
     // Content
     &-content{
       width: 100%;
-      padding: 10px;
+      padding: 10px 0 0 10px;
       &__svg{
-        background: rgba(#393939, 0.2);
+        background: rgba(#393939, 0.05);
+        &-grid{
+          opacity: 0;
+          transition: opacity 0.5s ease;
+          &--visible{
+            opacity: 1;
+          }
+        }
       }
     }
   // Form elements
+  &-toggle{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &__checkbox{
+      display: none;
+    }
+    &__btn{
+      position: relative;
+      height: 20px;
+      width: 35px;
+      border-radius: 10px;
+      border: 1px solid #393939;
+      opacity: 0.3;
+      transition: opacity 0.5s ease, background-color 0.5s ease;
+      &::before{
+        content: "";
+        display: block;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #393939;
+        transition: transform 0.5s ease, background-color 0.5s ease;
+      }
+    }
+    &__checkbox:checked + &__btn{
+      opacity: 1;
+      background-color: #393939;
+      &::before{
+        transform: translateX(14.5px);
+        background-color: #FFFCEF;
+      }
+    }
+    &__label{
+      display: block;
+      margin-left: 5px;
+      margin-top: 2px;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+  }
   &-label{
     display: block;
     text-transform: uppercase;
