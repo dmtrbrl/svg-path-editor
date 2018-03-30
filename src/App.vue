@@ -51,12 +51,12 @@
           class="spe-content__svg">
           <!-- Grid -->
           <defs>
-            <pattern id="smallGrid" width="8" height="8" patternUnits="userSpaceOnUse">
-              <path d="M 8 0 L 0 0 0 8" fill="none" stroke="#393939" opacity="0.4" stroke-width="0.5"/>
+            <pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse">
+              <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#393939" opacity="0.4" stroke-width="0.5"/>
             </pattern>
-            <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
-              <rect width="80" height="80" fill="url(#smallGrid)"/>
-              <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#393939" opacity="0.4" stroke-width="1"/>
+            <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+              <rect width="100" height="100" fill="url(#smallGrid)"/>
+              <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#393939" opacity="0.4" stroke-width="1"/>
             </pattern>
           </defs>
           <rect class="spe-content__svg-grid" :class="{'spe-content__svg-grid--visible': showGrid}" width="100%" height="100%" fill="url(#grid)" />
