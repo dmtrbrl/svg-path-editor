@@ -85,7 +85,7 @@ export default {
         translateY: 0,
         rotate: 0
       },
-      showGrid: false,
+      showGrid: true,
       centerX: 0,
       centerY: 0
     }
